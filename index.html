@@ -23,18 +23,21 @@
         // Sem by přišlo odesání dat z datalayeru
     </script>
     <h1>Form</h1>
-    <form id="form" method="get" action="/form/">
+    <form id="form" method="get" action="/">
         <div class="form-group">
             <label>Text</label>
             <input type="text" class="form-control" name="text" />
+            <span class="help-block">6-30 characters long, alphabetical, number, underscore (e.g. 123_ab)</span>
         </div>
         <div class="form-group">
             <label>Email address</label>
             <input type="text" class="form-control" name="email" />
+            <span class="help-block">Email in valid format (e.g. t@e.st)</span>
         </div>
         <div class="form-group">
             <label>Phone number</label>
             <input type="text" class="form-control" name="telephone" />
+            <span class="help-block">Valid czech phone number format - nine digits with optional country code +420 (e.g. +420 123 456 789)</span>
         </div>
         <div class="form-group">
             <label>Choose two or three:</label>
@@ -63,6 +66,7 @@
                     <input type="checkbox" name="moznosti[]" value="5" /> Fifth
                 </label>
             </div>
+            <span class="help-block">No more, no less (e.g. First, Third)</span>
         </div>
         <div class="form-group">
             <label>Date</label>
@@ -70,20 +74,25 @@
             <span class="help-block">Date in DD.MM.YYYY format (e.g. 01.01.2001)</span>
         </div>
         <div class="form-group">
+            <span class="help-block">Fill in at least 2 of 3:</span>
             <label>Input minimum</label>
             <input type="text" class="form-control" name="minCislo" />
+            <span class="help-block">Only number, greater than 0, lesser than maximum</span>
         </div>
         <div class="form-group">
             <label>Input maximum</label>
             <input type="text" class="form-control" name="maxCislo" />
+            <span class="help-block">Only number, lesser than or equal to maximum, greater than or equal to minimum</span>
         </div>
         <div class="form-group">
             <label>Input number between them</label>
             <input type="text" class="form-control" name="cislo" />
+            <span class="help-block">Only number, greater than minimum</span>
         </div>        
         <div class="form-group">
             <label>Bank account number:</label>
             <input type="text" class="form-control" name="cisloUctu" />
+            <span class="help-block">Non empty, 2-10 digits, valid format (e.g. 123)</span>
         </div>        
 
         <input type="submit" value="Odeslat">
@@ -241,7 +250,6 @@
                                 message: 'The value is not a valid number'
                             },
                             between: {
-                                //                                 inclusive: 'true',
                                 min: 'minCislo',
                                 max: 'maxCislo',
                                 message: 'The number must be between minimum and maximum'
@@ -250,9 +258,9 @@
                     },
                     cisloUctu: {
                         validators: {
-                            notEmpty: {
-                                message: 'This filed is required and cannot be empty'
-                            },
+                            //                             notEmpty: {
+                            //                                 message: 'This filed is required and cannot be empty'
+                            //                             },
                             digits: {
                                 message: 'The value is not a valid number'
                             },
@@ -264,13 +272,18 @@
                             callback: {
                                 message: 'Invalid account number',
                                 callback: function(value) {
-                                    var n = value.length;
-                                    var vahy = [6, 3, 7, 9, 10, 5, 8, 4, 2, 1];
-                                    var souc = 0;
-                                    for (i = n - 1; i >= 0; i--) {
-                                        souc = souc + parseInt(value.charAt(i)) * vahy[10 - n + i];
+                                    if ((value == "") || (value == 0)) {
+                                        return false;
+                                    } else {
+                                        var n = value.length;
+                                        var vahy = [6, 3, 7, 9, 10, 5, 8, 4, 2, 1];
+                                        var souc = 0;
+                                        for (i = n - 1; i >= 0; i--) {
+                                            souc = souc + parseInt(value.charAt(i)) * vahy[10 - n + i];
+                                        }
+                                        return (souc % 11) == 0;
                                     }
-                                    return (souc % 11) == 0;
+                                    // Když dostane na vstupu prázdný string nebo nulu, tak je to sice true, ale z neznámého důvodu to spouští dvakrát on('success.form.bv') - při zakomentování callbacku se to neděje
                                 }
                             }
                         }
