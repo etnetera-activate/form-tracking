@@ -1,0 +1,343 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Form</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"/>
+    <style type="text/css">
+        body {
+            padding: 2em;
+        }
+    </style>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"></script>
+</head>
+<body>
+    <script type="text/javascript">
+        var measure = {
+            form: 'reg_form',
+            status: 'view',
+            errors: []
+        }
+        // Sem by přišlo odesání dat z datalayeru
+    </script>
+    <h1>Form</h1>
+    <form id="form" method="get" action="/form/">
+        <div class="form-group">
+            <label>Text</label>
+            <input type="text" class="form-control" name="text" />
+        </div>
+        <div class="form-group">
+            <label>Email address</label>
+            <input type="text" class="form-control" name="email" />
+        </div>
+        <div class="form-group">
+            <label>Phone number</label>
+            <input type="text" class="form-control" name="telephone" />
+        </div>
+        <div class="form-group">
+            <label>Choose two or three:</label>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="moznosti[]" value="1" /> First
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="moznosti[]" value="2" /> Second
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="moznosti[]" value="3" /> Third
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="moznosti[]" value="4" /> Fourth
+                </label>
+            </div>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="moznosti[]" value="5" /> Fifth
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Date</label>
+            <input type="text" class="form-control" name="datum" />
+            <span class="help-block">Date in DD.MM.YYYY format (e.g. 01.01.2001)</span>
+        </div>
+        <div class="form-group">
+            <label>Input minimum</label>
+            <input type="text" class="form-control" name="minCislo" />
+        </div>
+        <div class="form-group">
+            <label>Input maximum</label>
+            <input type="text" class="form-control" name="maxCislo" />
+        </div>
+        <div class="form-group">
+            <label>Input number between them</label>
+            <input type="text" class="form-control" name="cislo" />
+        </div>        
+        <div class="form-group">
+            <label>Bank account number:</label>
+            <input type="text" class="form-control" name="cisloUctu" />
+        </div>        
+
+        <input type="submit" value="Odeslat">
+    </form>
+    <script type="text/javascript">
+        function Pushni(field, errType, fieldVal) {
+            measure.errors.push({
+                fieldName: field,
+                errorType: errType,
+                fieldValue: fieldVal
+            });
+        }
+
+        function Oznacene(kde) {
+            var seznam = "";
+            for (var i = 0; i < kde.length; ++i) {
+                if (kde[i].checked) {
+                    seznam = seznam + kde[i].value + ",";
+                }
+            }
+            return seznam;
+        }
+
+        function ostatniKriteriaOk() {
+            if ((document.getElementsByName('text')[0].value == "") && (document.getElementsByName('email')[0].value == "") && (document.getElementsByName('telephone')[0].value == "") && (document.getElementsByName('moznosti[]')[0].checked == false) && (document.getElementsByName('moznosti[]')[1].checked == false) && (document.getElementsByName('moznosti[]')[2].checked == false) && (document.getElementsByName('moznosti[]')[3].checked == false) && (document.getElementsByName('moznosti[]')[4].checked == false) && (document.getElementsByName('datum')[0].value == "") && (document.getElementsByName('minCislo')[0].value == "") && (document.getElementsByName('maxCislo')[0].value == "") && (document.getElementsByName('cislo')[0].value == "") && (document.getElementsByName('cisloUctu')[0].value == "")) { // celý formulář je prázdný
+                measure.errors = [];
+                Pushni('reg_form', 'empty', "");
+                return false;
+            } else { // tj. něco je vyplněné - ověřuji dále
+                var mnoz = [((document.getElementsByName('minCislo')[0].value != "") === true ? 1 : 0), ((document.getElementsByName('maxCislo')[0].value != "") === true ? 1 : 0), ((document.getElementsByName('cislo')[0].value != "") === true ? 1 : 0)];
+                if ((mnoz[0] + mnoz[1] + mnoz[2]) > 1) { // vyplněné aspoň 2/3
+                    return true;
+                } else { // vyplněno 1 nebo 0
+                    Pushni('trojice_cisel', 'malo_vyplnenych', mnoz.toString());
+                    return false;
+                }
+            }
+        }
+
+        $(document).ready(function() {
+            $('#form').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                live: 'disabled',
+                fields: {
+                    text: {
+                        message: 'The username is not valid',
+                        validators: {
+                            //                             notEmpty: {
+                            //                                 message: 'The text is required and cannot be empty'
+                            //                             },
+                            stringLength: {
+                                min: 6,
+                                max: 30,
+                                message: 'The text must be more than 6 and less than 30 characters long'
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_]+$/,
+                                message: 'The text can only consist of alphabetical, number and underscore'
+                            }
+                        }
+                    },
+                    email: {
+                        validators: {
+                            //                             notEmpty: {
+                            //                                 message: 'The email is required and cannot be empty'
+                            //                             },
+                            emailAddress: {
+                                message: 'The input is not a valid email address'
+                            }
+                        }
+                    },
+                    telephone: {
+                        validators: {
+                            //                             notEmpty: {
+                            //                                 message: 'The phone number is required and cannot be empty'
+                            //                             },
+                            // phone validace není udělaná pro ČR
+                            regexp: {
+                                regexp: /^(\+420|00420)?[0-9]{9}$/,
+                                message: 'The input is not a valid phone number'
+                            }
+                        }
+                    },
+                    //                     'moznosti[]': {
+                    //                         validators: {
+                    //                             choice: {
+                    //                                 min: 2,
+                    //                                 max: 3,
+                    //                                 message: 'Choose 2-3 items' 
+                    //                             }
+                    //                         }
+                    //                     },
+                    datum: {
+                        validators: {
+                            //                             notEmpty: {
+                            //                                 message: 'The date is required and cannot be empty'
+                            //                             },
+                            date: {
+                                format: 'DD.MM.YYYY',
+                                separator: '.',
+                                message: 'The value is not a valid date'
+                            }
+                        }
+                    },
+                    minCislo: {
+                        validators: {
+                            //                             notEmpty: {
+                            //                                 message: 'This filed is required and cannot be empty'
+                            //                             },
+                            numeric: {
+                                separator: ',',
+                                message: 'The value is not a valid number'
+                            },
+                            greaterThan: {
+                                inclusive: 'true',
+                                value: 0,
+                                message: 'The number must be greter than 0'
+                            },
+                            lessThan: {
+                                inclusive: 'true',
+                                value: 'maxCislo',
+                                message: 'The number must be lesser than maximum'
+                            }
+                            // nefunguje - nevím, proč
+                        }
+                    },
+                    maxCislo: {
+                        validators: {
+                            //                             notEmpty: {
+                            //                                 message: 'This filed is required and cannot be empty'
+                            //                             },
+                            numeric: {
+                                separator: ',',
+                                message: 'The value is not a valid number'
+                            },
+                            greaterThan: {
+                                inclusive: 'true',
+                                value: 'minCislo',
+                                message: 'The number must be greter than minimum'
+                            }
+                        }
+                    },
+                    cislo: {
+                        validators: {
+                            //                             notEmpty: {
+                            //                                 message: 'This filed is required and cannot be empty'
+                            //                             },
+                            numeric: {
+                                separator: ',',
+                                message: 'The value is not a valid number'
+                            },
+                            between: {
+                                //                                 inclusive: 'true',
+                                min: 'minCislo',
+                                max: 'maxCislo',
+                                message: 'The number must be between minimum and maximum'
+                            }
+                        }
+                    },
+                    cisloUctu: {
+                        validators: {
+                            notEmpty: {
+                                message: 'This filed is required and cannot be empty'
+                            },
+                            digits: {
+                                message: 'The value is not a valid number'
+                            },
+                            stringLength: {
+                                min: 2,
+                                max: 10,
+                                message: 'Account number has to be 2-10 digits long'
+                            },
+                            callback: {
+                                message: 'Invalid account number',
+                                callback: function(value) {
+                                    var n = value.length;
+                                    var vahy = [6, 3, 7, 9, 10, 5, 8, 4, 2, 1];
+                                    var souc = 0;
+                                    for (i = n - 1; i >= 0; i--) {
+                                        souc = souc + parseInt(value.charAt(i)) * vahy[10 - n + i];
+                                    }
+                                    return (souc % 11) == 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+            .on('error.validator.bv', function(e, data) {
+                switch (data.field) {
+                    case 'moznosti[]':
+                        var co = Oznacene(document.getElementsByName('moznosti[]'));
+                        break;
+                    case 'cislo':
+                        switch (data.validator) {
+                            case 'between':
+                                var co = data.element[0].value + "|" + document.getElementsByName('minCislo')[0].value + "-" + document.getElementsByName('maxCislo')[0].value;
+                                break;
+                            default:
+                                var co = data.element[0].value;
+                        }
+                        break;
+                    case 'minCislo':
+                        switch (data.validator) {
+                            case 'lessThan':
+                                var co = data.element[0].value + "<" + document.getElementsByName('maxCislo')[0].value;
+                                break;
+                            default:
+                                var co = data.element[0].value;
+                        }
+                        break;
+                    case 'maxCislo':
+                        switch (data.validator) {
+                            case 'greaterThan':
+                                var co = data.element[0].value + ">" + document.getElementsByName('minCislo')[0].value;
+                                break;
+                            default:
+                                var co = data.element[0].value;
+                        }
+                        break;
+                    default:
+                        var co = data.element[0].value;
+                }
+                Pushni(data.field, data.validator, co);
+            })
+            .on('error.form.bv', function(event) {
+                event.preventDefault();
+                ostatniKriteriaOk();
+                measure.status = 'fail';
+                // Sem by pak přišlo odeslání dat z datalayeru a pokračování původní akce
+                // measure.errors = [];
+                // Zakomentováno, kvůli testování
+            })
+            .on('success.form.bv', function(event) {
+                event.preventDefault();
+                var OK = ostatniKriteriaOk();
+                if (OK) {
+                    measure.status = 'success';
+                    // Sem by přišlo odeslání dat z datalayeru a pokračování původní akce
+                    // measure.errors = [];
+                    // Zakomentováno, kvůli testování
+                } else {
+                    measure.status = 'fail';
+                    // Sem by přišlo odeslání dat z datalayeru a vrácení do formuláře
+                    // measure.errors = [];
+                    // Zakomentováno, kvůli testování
+                }
+            })
+        });
+    </script>
+</body>
+</html>
