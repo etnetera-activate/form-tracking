@@ -6,10 +6,16 @@
         body {
             padding: 2em;
         }
+        legend.panel-title {
+            border: 0;
+            margin: 0;
+            font-size: inherit;
+        }
     </style>
     <!-- Následují zdroje použité pro tvorbu formuláře a validátorů-->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css"/>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css" />
+    <link rel="stylesheet" href="/datepicker/css/datepicker3.css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"></script>
@@ -29,21 +35,47 @@
     <h1>Form</h1>
     <!-- Html definice formulářových prvků-->
     <form id="form" method="get" action="/">
-        <div class="form-group">
-            <label>Text*</label>
-            <input type="text" class="form-control" name="text" />
-            <span class="help-block">6-30 characters long, alphabetical, number, underscore, not empty (e.g. 123_ab), not empty</span>
-        </div>
-        <div class="form-group">
-            <label>Email address</label>
-            <input type="text" class="form-control" name="email" />
-            <span class="help-block">Email in valid format, not empty (e.g. t@e.st)</span>
-        </div>
-        <div class="form-group">
-            <label>Phone number</label>
-            <input type="text" class="form-control" name="telephone" />
-            <span class="help-block">Valid czech phone number format - nine digits with optional country code +420, not empty (e.g. +420 123 456 789)</span>
-        </div>
+        <fieldset class="panel panel-default">
+            <div class="panel-heading">
+                <legend class="panel-title">Specific formats</legend>
+            </div>
+            <div class="panel-body container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Text*</label>
+                            <input type="text" class="form-control" name="text" />
+                            <span class="help-block">6-30 characters long, alphabetical, number, underscore, not empty (e.g. 123_ab), not empty</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Email address</label>
+                            <input type="text" class="form-control" name="email" />
+                            <span class="help-block">Email in valid format, not empty (e.g. t@e.st)</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone number</label>
+                            <input type="text" class="form-control" name="telephone" />
+                            <span class="help-block">Valid czech phone number format - nine digits with optional country code +420, not empty (e.g. +420 123 456 789)</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Date</label>
+                            <div class="input-group date" id="datepicker">
+                                <input type="text" class="form-control" name="datum" data-provide="datepicker" />
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
+                            <span class="help-block">Date in DD.MM.YYYY format (e.g. 01.01.2001)</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Bank account number:</label>
+                            <input type="text" class="form-control" name="cisloUctu" />
+                            <span class="help-block">Not empty, 2-10 digits, valid format (e.g. 123)</span>
+                        </div>        
+                    </div>        
+                    <div class="col-md-6">
+                    </div>        
+                </div>        
+            </div>
+        </fieldset>
         <div class="form-group">
             <label>Choose two or three:</label>
             <div class="checkbox">
@@ -74,11 +106,6 @@
             <span class="help-block">No more, no less (e.g. First, Third)</span>
         </div>
         <div class="form-group">
-            <label>Date</label>
-            <input type="text" class="form-control" name="datum" />
-            <span class="help-block">Date in DD.MM.YYYY format (e.g. 01.01.2001)</span>
-        </div>
-        <div class="form-group">
             <span class="help-block">Fill in at least 2 of 3:</span>
             <label>Input minimum</label>
             <input type="text" class="form-control" name="minCislo" />
@@ -94,32 +121,19 @@
             <input type="text" class="form-control" name="cislo" />
             <span class="help-block">Only number, greater than minimum</span>
         </div>        
-        <div class="form-group">
-            <label>Bank account number:</label>
-            <input type="text" class="form-control" name="cisloUctu" />
-            <span class="help-block">Not empty, 2-10 digits, valid format (e.g. 123)</span>
-        </div>        
-
-        <input type="submit" value="Odeslat">
+        <input type="submit" class="btn btn-primary" value="Submit">
     </form>
+    <script type="text/javascript" src="/datepicker/js/bootstrap-datepicker.js"></script>
     <!-- Konec definice prvků formuláře-->
     <script type="text/javascript">
+        $('.input-group.date').datepicker({ format: 'dd.mm.yyyy', autoclose: true, todayHighlight: true });
+        
         function Pushni(field, errType, fieldVal) { // Funkce na plnění data layeru chybovými hlášeními
             measure.errors.push({
                 fieldName: field, // Jméno pole / sekce kde došlo k chybě
                 errorType: errType, // Typ chyby
                 fieldValue: fieldVal // Hodnota, která je chybně
             });
-        }
-
-        function Oznacene(kde) { // Z pole checkboxů vrátí string se záznamem, které checkboxy jsou označené
-            var seznam = "";
-            for (var i = 0; i < kde.length; ++i) {
-                if (kde[i].checked) {
-                    seznam = seznam + kde[i].value + ",";
-                }
-            }
-            return seznam;
         }
 
         function ostatniKriteriaOk() { // Validace chyb, které nejdou implementovat prostřednictvím bootstrap validátorů (např. proto, že se nevztahují ke konkrétnímu poli)
@@ -280,17 +294,25 @@
                 }
             }) // Konec definic validátorů
             .on('error.validator.bv', function(e, data) { // Vždy, když nějaký validátor zahlásí chybnou validaci
+                var co;
                 switch (data.field) { // Dle prvku, ve kterém je chyba, se určí co znamená "hodnota, která je chybně" (zde je to vždy string)
                     case 'moznosti[]':
-                        var co = Oznacene(document.getElementsByName('moznosti[]')); // Seznam checkboxů, které jsou vyplněná
+                        var fields = document.getElementsByName('moznosti[]'),
+                            values = []; // Seznam checkboxů
+                        for (var i = 0; i < fields.length; ++i) {
+                            if (fields[i].checked) {
+                                values.push(fields[i].value);
+                            }
+                        }
+                        co = values.join(',');
                         break;
                     case 'cislo':
                         switch (data.validator) {
                             case 'between':
-                                var co = data.element[0].value + "|" + document.getElementsByName('minCislo')[0].value + "-" + document.getElementsByName('maxCislo')[0].value; // Chybná hodnota a meze, ze kterých vybočila
+                                co = data.element[0].value + "|" + document.getElementsByName('minCislo')[0].value + "-" + document.getElementsByName('maxCislo')[0].value; // Chybná hodnota a meze, ze kterých vybočila
                                 break;
                             default:
-                                var co = data.element[0].value;
+                                co = data.element[0].value;
                         }
                         break;
                     case 'minCislo':
@@ -299,20 +321,20 @@
                                 var co = data.element[0].value + "<" + document.getElementsByName('maxCislo')[0].value; // Chybná hodnota a mez, kterou překročila
                                 break;
                             default:
-                                var co = data.element[0].value;
+                                co = data.element[0].value;
                         }
                         break;
                     case 'maxCislo':
                         switch (data.validator) {
                             case 'greaterThan':
-                                var co = data.element[0].value + ">" + document.getElementsByName('minCislo')[0].value; // Chybná hodnota a mez, které nedosáhla
+                                co = data.element[0].value + ">" + document.getElementsByName('minCislo')[0].value; // Chybná hodnota a mez, které nedosáhla
                                 break;
                             default:
-                                var co = data.element[0].value;
+                                co = data.element[0].value;
                         }
                         break;
                     default:
-                        var co = data.element[0].value; // Defaultně je to value vyplněného prvku
+                        co = data.element[0].value; // Defaultně je to value vyplněného prvku
                 }
                 Pushni(data.field, data.validator, co); // Přidání chyby do data layeru
             })
@@ -321,7 +343,8 @@
                 ostatniKriteriaOk(); // Ověření kritérií, která se neověřují validátorem
                 measure.status = 'fail'; // Nastavení stavu formuláře
                 // Následovalo by odeslání dat z data layeru do konkrétního analytického software
-                // measure.errors = []; // Vymazání záznamů o chybách, aby nedocházelo k duplikaci, pro lepší názornost výsledků nyní zakomentováno
+                console.log(measure.errors);
+                measure.errors = []; // Vymazání záznamů o chybách, aby nedocházelo k duplikaci, pro lepší názornost výsledků nyní zakomentováno
             })
             .on('success.form.bv', function(event) { // Pokud žádný validátor nehlásí chybu
                 event.preventDefault();
@@ -329,11 +352,12 @@
                 if (OK) { // Pokud nejsou žádné chyby
                     measure.status = 'success';
                     // Následovalo by odeslání dat z data layeru do konkrétního analytického software
-                    // measure.errors = []; // Vymazání záznamů o chybách, aby nedocházelo k duplikaci, pro lepší názornost výsledků nyní zakomentováno
+                    console.log(measure);
                 } else { // Pokud jsou nějaké chyby
                     measure.status = 'fail';
                     // Následovalo by odeslání dat z data layeru do konkrétního analytického software
-                    // measure.errors = []; // Vymazání záznamů o chybách, aby nedocházelo k duplikaci, pro lepší názornost výsledků nyní zakomentováno
+                    console.log(measure.errors);
+                    measure.errors = []; // Vymazání záznamů o chybách, aby nedocházelo k duplikaci, pro lepší názornost výsledků nyní zakomentováno
                 }
             })
         });
