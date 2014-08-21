@@ -1,0 +1,14 @@
+body {
+    padding: 2em;
+}
+legend.panel-title {
+    border: 0;
+    margin: 0;
+    font-size: inherit;
+}
+.has-feedback .form-control-feedback {
+    top: 25px !important;
+}
+#footer {
+    padding: 10px 5px;
+}

@@ -1,24 +1,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Form</title>
+    <title>Form Validations Measurement</title>
     <!-- Následují zdroje použité pro tvorbu formuláře a validátorů-->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/style.css" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css" />
     <link rel="stylesheet" href="/datepicker/css/datepicker.css" />
-    <style type="text/css">
-        body {
-            padding: 2em;
-        }
-        legend.panel-title {
-            border: 0;
-            margin: 0;
-            font-size: inherit;
-        }
-        .has-feedback .form-control-feedback {
-            top: 25px !important;
-        }
-    </style>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"></script>
@@ -38,7 +26,7 @@
         // Následovalo by odeslání dat z data layeru do konkrétního analytického software
     </script>
     <!-- Konec měření zobrazení formuláře-->
-    <h1>Form</h1>
+    <h1>Form Validations Measurement</h1>
     <!-- Html definice formulářových prvků-->
     <form id="form" method="get" action="/">
         <fieldset class="panel panel-default">
@@ -51,7 +39,7 @@
                         <div class="form-group">
                             <label>Text*</label>
                             <input type="text" class="form-control" name="text" />
-                            <span class="help-block">6-30 characters long, alphabetical, number, underscore, not empty (e.g. 123_ab), not empty</span>
+                            <span class="help-block">6-30 characters long, alphabetical, number, underscore, not empty (e.g. 123_ab)</span>
                         </div>
                         <div class="form-group">
                             <label>Email address</label>
@@ -90,53 +78,66 @@
                 </div>        
             </div>
         </fieldset>
-        <div class="form-group">
-            <label>Choose two or three:</label>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="checkboxes[]" value="1" /> First
-                </label>
+        <fieldset class="panel panel-default">
+            <div class="panel-heading">
+                <legend class="panel-title">Complex rules</legend>
             </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="checkboxes[]" value="2" /> Second
-                </label>
+            <div class="panel-body container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Choose two or three:</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="checkboxes[]" value="1" /> First
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="checkboxes[]" value="2" /> Second
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="checkboxes[]" value="3" /> Third
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="checkboxes[]" value="4" /> Fourth
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" name="checkboxes[]" value="5" /> Fifth
+                                </label>
+                            </div>
+                            <span class="help-block">No more, no less (e.g. First, Third)</span>
+                        </div>
+                        <div>
+                            <span class="help-block">Fill in at least 2 of 3:</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Input minimum</label>
+                            <input type="text" class="form-control" name="minCislo" />
+                            <span class="help-block">Only number, greater than 0, lesser than maximum</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Input maximum</label>
+                            <input type="text" class="form-control" name="maxCislo" />
+                            <span class="help-block">Only number, lesser than or equal to maximum, greater than or equal to minimum</span>
+                        </div>
+                        <div class="form-group">
+                            <label>Input number between them</label>
+                            <input type="text" class="form-control" name="cislo" />
+                            <span class="help-block">Only number, greater than minimum</span>
+                        </div>        
+                    </div>        
+                    <div class="col-md-6">
+                    </div>        
+                </div>        
             </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="checkboxes[]" value="3" /> Third
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="checkboxes[]" value="4" /> Fourth
-                </label>
-            </div>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" name="checkboxes[]" value="5" /> Fifth
-                </label>
-            </div>
-            <span class="help-block">No more, no less (e.g. First, Third)</span>
-        </div>
-        <div>
-            <span class="help-block">Fill in at least 2 of 3:</span>
-        </div>
-        <div class="form-group">
-            <label>Input minimum</label>
-            <input type="text" class="form-control" name="minCislo" />
-            <span class="help-block">Only number, greater than 0, lesser than maximum</span>
-        </div>
-        <div class="form-group">
-            <label>Input maximum</label>
-            <input type="text" class="form-control" name="maxCislo" />
-            <span class="help-block">Only number, lesser than or equal to maximum, greater than or equal to minimum</span>
-        </div>
-        <div class="form-group">
-            <label>Input number between them</label>
-            <input type="text" class="form-control" name="cislo" />
-            <span class="help-block">Only number, greater than minimum</span>
-        </div>        
+        </fieldset>
         <input type="submit" class="btn btn-primary" value="Submit">
     </form>
     <!-- Konec definice prvků formuláře-->
@@ -381,5 +382,14 @@
             })
         });
     </script>
+    <div id="footer" class="container-fluid">
+        <ul class="list-inline small">
+            Thanks to:
+            <li><a href="http://getbootstrap.com/">Twitter Bootstrap</a></li>
+            <li><a href="http://bootstrapvalidator.com/">Bootstrap Validator</a></li>
+            <li><a href="http://momentjs.com/">Moment.js</a></li>
+            <li><a href="http://eonasdan.github.io/bootstrap-datetimepicker/">Bootstrap Datetimepicker</a></li>
+        </ul>
+    </div>
 </body>
 </html>
