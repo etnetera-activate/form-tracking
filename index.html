@@ -2,6 +2,10 @@
 <head>
     <meta charset="utf-8">
     <title>Form</title>
+    <!-- Následují zdroje použité pro tvorbu formuláře a validátorů-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css" />
+    <link rel="stylesheet" href="/datepicker/css/datepicker.css" />
     <style type="text/css">
         body {
             padding: 2em;
@@ -11,14 +15,15 @@
             margin: 0;
             font-size: inherit;
         }
+        .has-feedback .form-control-feedback {
+            top: 25px !important;
+        }
     </style>
-    <!-- Následují zdroje použité pro tvorbu formuláře a validátorů-->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/css/bootstrapValidator.min.css" />
-    <link rel="stylesheet" href="/datepicker/css/datepicker3.css" />
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.0/js/bootstrapValidator.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.min.js"></script>
+    <script type="text/javascript" src="/datepicker/js/datepicker.js"></script>
     <!-- Konec zdrojů-->
 </head>
 <body>
@@ -60,11 +65,18 @@
                         <div class="form-group">
                             <label>Date</label>
                             <div class="input-group date" id="datepicker">
-                                <input type="text" class="form-control" name="datum" data-provide="datepicker" />
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                <input type="text" class="form-control" name="datum" required data-provide="datepicker" />
                             </div>
                             <span class="help-block">Date in DD.MM.YYYY format (e.g. 01.01.2001)</span>
                         </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datepicker').datetimepicker({
+                                    pickTime: false
+                                });
+                            });
+                        </script>
                         <div class="form-group">
                             <label>Bank account number:</label>
                             <input type="text" class="form-control" name="cisloUctu" />
@@ -80,33 +92,35 @@
             <label>Choose two or three:</label>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="moznosti[]" value="1" /> First
+                    <input type="checkbox" name="checkboxes[]" value="1" /> First
                 </label>
             </div>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="moznosti[]" value="2" /> Second
+                    <input type="checkbox" name="checkboxes[]" value="2" /> Second
                 </label>
             </div>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="moznosti[]" value="3" /> Third
+                    <input type="checkbox" name="checkboxes[]" value="3" /> Third
                 </label>
             </div>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="moznosti[]" value="4" /> Fourth
+                    <input type="checkbox" name="checkboxes[]" value="4" /> Fourth
                 </label>
             </div>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="moznosti[]" value="5" /> Fifth
+                    <input type="checkbox" name="checkboxes[]" value="5" /> Fifth
                 </label>
             </div>
             <span class="help-block">No more, no less (e.g. First, Third)</span>
         </div>
-        <div class="form-group">
+        <div>
             <span class="help-block">Fill in at least 2 of 3:</span>
+        </div>
+        <div class="form-group">
             <label>Input minimum</label>
             <input type="text" class="form-control" name="minCislo" />
             <span class="help-block">Only number, greater than 0, lesser than maximum</span>
@@ -123,30 +137,29 @@
         </div>        
         <input type="submit" class="btn btn-primary" value="Submit">
     </form>
-    <script type="text/javascript" src="/datepicker/js/bootstrap-datepicker.js"></script>
     <!-- Konec definice prvků formuláře-->
     <script type="text/javascript">
-        $('.input-group.date').datepicker({ format: 'dd.mm.yyyy', autoclose: true, todayHighlight: true });
-        
-        function Pushni(field, errType, fieldVal) { // Funkce na plnění data layeru chybovými hlášeními
-            measure.errors.push({
-                fieldName: field, // Jméno pole / sekce kde došlo k chybě
-                errorType: errType, // Typ chyby
-                fieldValue: fieldVal // Hodnota, která je chybně
-            });
-        }
-
-        function ostatniKriteriaOk() { // Validace chyb, které nejdou implementovat prostřednictvím bootstrap validátorů (např. proto, že se nevztahují ke konkrétnímu poli)
-            if ((document.getElementsByName('text')[0].value == "") && (document.getElementsByName('email')[0].value == "") && (document.getElementsByName('telephone')[0].value == "") && (document.getElementsByName('moznosti[]')[0].checked == false) && (document.getElementsByName('moznosti[]')[1].checked == false) && (document.getElementsByName('moznosti[]')[2].checked == false) && (document.getElementsByName('moznosti[]')[3].checked == false) && (document.getElementsByName('moznosti[]')[4].checked == false) && (document.getElementsByName('datum')[0].value == "") && (document.getElementsByName('minCislo')[0].value == "") && (document.getElementsByName('maxCislo')[0].value == "") && (document.getElementsByName('cislo')[0].value == "") && (document.getElementsByName('cisloUctu')[0].value == "")) { // celý formulář je prázdný
+        function checkGlobalErrors() { // Validace chyb, které nejdou implementovat prostřednictvím bootstrap validátorů (např. proto, že se nevztahují ke konkrétnímu poli)
+            if ((document.getElementsByName('text')[0].value == "") && (document.getElementsByName('email')[0].value == "") && (document.getElementsByName('telephone')[0].value == "") && (document.getElementsByName('checkboxes[]')[0].checked == false) && (document.getElementsByName('checkboxes[]')[1].checked == false) && (document.getElementsByName('checkboxes[]')[2].checked == false) && (document.getElementsByName('checkboxes[]')[3].checked == false) && (document.getElementsByName('checkboxes[]')[4].checked == false) && (document.getElementsByName('datum')[0].value == "") && (document.getElementsByName('minCislo')[0].value == "") && (document.getElementsByName('maxCislo')[0].value == "") && (document.getElementsByName('cislo')[0].value == "") && (document.getElementsByName('cisloUctu')[0].value == "")) { // celý formulář je prázdný
                 measure.errors = []; // Odstraní jednotlivé změřené chyby (budou nahrazeny jednou souhrnou)
-                Pushni('test_form', 'empty', ""); // Přidá do měření chybu "formulář je prázdný"
+                // Přidá do měření chybu "formulář je prázdný"
+                measure.errors.push({
+                    fieldName: 'test_form',
+                    errorType: 'empty',
+                    fieldValue: ''
+                });
                 return false;
             } else { // tj. některý prvek formuláře je vyplněný - ověřuji dále
                 var mnoz = [((document.getElementsByName('minCislo')[0].value != "") === true ? 1 : 0), ((document.getElementsByName('maxCislo')[0].value != "") === true ? 1 : 0), ((document.getElementsByName('cislo')[0].value != "") === true ? 1 : 0)];
                 if ((mnoz[0] + mnoz[1] + mnoz[2]) > 1) { // vyplněné aspoň dvě ze tří polí min/max/between
                     return true;
                 } else { // vyplněno 1 nebo 0 polí
-                    Pushni('trojice_cisel', 'malo_vyplnenych', mnoz.toString()); //Přidá do měření chybu "vyplněno málo polí" a informaci (string), která pole byla a nebyla vyplněna
+                    //Přidá do měření chybu "vyplněno málo polí" a informaci (string), která pole byla a nebyla vyplněna
+                    measure.errors.push({
+                        fieldName: 'trojice_cisel',
+                        errorType: 'malo_vyplnenych',
+                        fieldValue: mnoz.toString()
+                    });
                     return false;
                 }
             }
@@ -201,7 +214,7 @@
                             }
                         }
                     },
-                    'moznosti[]': {
+                    'checkboxes[]': {
                         validators: {
                             choice: {
                                 min: 2,
@@ -294,53 +307,57 @@
                 }
             }) // Konec definic validátorů
             .on('error.validator.bv', function(e, data) { // Vždy, když nějaký validátor zahlásí chybnou validaci
-                var co;
+                var value;
                 switch (data.field) { // Dle prvku, ve kterém je chyba, se určí co znamená "hodnota, která je chybně" (zde je to vždy string)
-                    case 'moznosti[]':
-                        var fields = document.getElementsByName('moznosti[]'),
+                    case 'checkboxes[]':
+                        var fields = document.getElementsByName('checkboxes[]'),
                             values = []; // Seznam checkboxů
                         for (var i = 0; i < fields.length; ++i) {
                             if (fields[i].checked) {
                                 values.push(fields[i].value);
                             }
                         }
-                        co = values.join(',');
+                        value = values.join(',');
                         break;
                     case 'cislo':
                         switch (data.validator) {
                             case 'between':
-                                co = data.element[0].value + "|" + document.getElementsByName('minCislo')[0].value + "-" + document.getElementsByName('maxCislo')[0].value; // Chybná hodnota a meze, ze kterých vybočila
+                                value = data.element[0].value + "|" + document.getElementsByName('minCislo')[0].value + "-" + document.getElementsByName('maxCislo')[0].value; // Chybná hodnota a meze, ze kterých vybočila
                                 break;
                             default:
-                                co = data.element[0].value;
+                                value = data.element[0].value;
                         }
                         break;
                     case 'minCislo':
                         switch (data.validator) {
                             case 'lessThan':
-                                var co = data.element[0].value + "<" + document.getElementsByName('maxCislo')[0].value; // Chybná hodnota a mez, kterou překročila
+                                var value = data.element[0].value + "<" + document.getElementsByName('maxCislo')[0].value; // Chybná hodnota a mez, kterou překročila
                                 break;
                             default:
-                                co = data.element[0].value;
+                                value = data.element[0].value;
                         }
                         break;
                     case 'maxCislo':
                         switch (data.validator) {
                             case 'greaterThan':
-                                co = data.element[0].value + ">" + document.getElementsByName('minCislo')[0].value; // Chybná hodnota a mez, které nedosáhla
+                                value = data.element[0].value + ">" + document.getElementsByName('minCislo')[0].value; // Chybná hodnota a mez, které nedosáhla
                                 break;
                             default:
-                                co = data.element[0].value;
+                                value = data.element[0].value;
                         }
                         break;
                     default:
-                        co = data.element[0].value; // Defaultně je to value vyplněného prvku
+                        value = data.element[0].value; // Defaultně je to value vyplněného prvku
                 }
-                Pushni(data.field, data.validator, co); // Přidání chyby do data layeru
+                measure.errors.push({
+                    fieldName: data.field,
+                    errorType: data.validator,
+                    fieldValue: value
+                });
             })
             .on('error.form.bv', function(event) { // Pokud některý validátor zahlásil chybu
                 event.preventDefault();
-                ostatniKriteriaOk(); // Ověření kritérií, která se neověřují validátorem
+                checkGlobalErrors(); // Ověření kritérií, která se neověřují validátorem
                 measure.status = 'fail'; // Nastavení stavu formuláře
                 // Následovalo by odeslání dat z data layeru do konkrétního analytického software
                 console.log(measure.errors);
@@ -348,7 +365,7 @@
             })
             .on('success.form.bv', function(event) { // Pokud žádný validátor nehlásí chybu
                 event.preventDefault();
-                var OK = ostatniKriteriaOk(); // Ověření kritérií, která se neověřují validátorem
+                var OK = checkGlobalErrors(); // Ověření kritérií, která se neověřují validátorem
                 if (OK) { // Pokud nejsou žádné chyby
                     measure.status = 'success';
                     // Následovalo by odeslání dat z data layeru do konkrétního analytického software
