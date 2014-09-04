@@ -143,7 +143,7 @@
     <!-- Konec definice prvků formuláře-->
     <script type="text/javascript">
         function checkGlobalErrors() { // Validace chyb, které nejdou implementovat prostřednictvím bootstrap validátorů (např. proto, že se nevztahují ke konkrétnímu poli)
-            if ((document.getElementsByName('text')[0].value == "") && (document.getElementsByName('email')[0].value == "") && (document.getElementsByName('telephone')[0].value == "") && (document.getElementsByName('checkboxes[]')[0].checked == false) && (document.getElementsByName('checkboxes[]')[1].checked == false) && (document.getElementsByName('checkboxes[]')[2].checked == false) && (document.getElementsByName('checkboxes[]')[3].checked == false) && (document.getElementsByName('checkboxes[]')[4].checked == false) && (document.getElementsByName('datum')[0].value == "") && (document.getElementsByName('minCislo')[0].value == "") && (document.getElementsByName('maxCislo')[0].value == "") && (document.getElementsByName('cislo')[0].value == "") && (document.getElementsByName('cisloUctu')[0].value == "")) { // celý formulář je prázdný
+            /*if ((document.getElementsByName('text')[0].value == "") && (document.getElementsByName('email')[0].value == "") && (document.getElementsByName('telephone')[0].value == "") && (document.getElementsByName('checkboxes[]')[0].checked == false) && (document.getElementsByName('checkboxes[]')[1].checked == false) && (document.getElementsByName('checkboxes[]')[2].checked == false) && (document.getElementsByName('checkboxes[]')[3].checked == false) && (document.getElementsByName('checkboxes[]')[4].checked == false) && (document.getElementsByName('datum')[0].value == "") && (document.getElementsByName('minCislo')[0].value == "") && (document.getElementsByName('maxCislo')[0].value == "") && (document.getElementsByName('cislo')[0].value == "") && (document.getElementsByName('cisloUctu')[0].value == "")) { // celý formulář je prázdný
                 measure.errors = []; // Odstraní jednotlivé změřené chyby (budou nahrazeny jednou souhrnou)
                 // Přidá do měření chybu "formulář je prázdný"
                 measure.errors.push({
@@ -152,7 +152,7 @@
                     fieldValue: ''
                 });
                 return false;
-            } else { // tj. některý prvek formuláře je vyplněný - ověřuji dále
+            } else { // tj. některý prvek formuláře je vyplněný - ověřuji dále*/
                 var mnoz = [((document.getElementsByName('minCislo')[0].value != "") === true ? 1 : 0), ((document.getElementsByName('maxCislo')[0].value != "") === true ? 1 : 0), ((document.getElementsByName('cislo')[0].value != "") === true ? 1 : 0)];
                 if ((mnoz[0] + mnoz[1] + mnoz[2]) > 1) { // vyplněné aspoň dvě ze tří polí min/max/between
                     return true;
@@ -165,7 +165,7 @@
                     });
                     return false;
                 }
-            }
+            /*}*/
         }
 
         // Následují prvky bootstrap validátoru
